@@ -169,7 +169,7 @@ function keyPush(evt) {
             if (yv != up) {
                 xv=0;yv=down;
             }
-			break;
+            break;
         case 39:
             if (xv != left) {
                 xv=right;yv=0;
@@ -179,6 +179,6 @@ function keyPush(evt) {
             if (yv != down) {
                 xv=0;yv=up;
             }
-			break;
+            break;
 	}
 }
