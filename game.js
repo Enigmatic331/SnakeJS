@@ -8,7 +8,8 @@ var xv=yv=0;
 var trail=[];
 var tail = 5;
 var timeRef;
-var defaultDiff = 145;
+var defaultDiff = SetDiff = 145;
+var diff = "";
 var canv;
 var ctx;
 var up = 1;
@@ -26,7 +27,6 @@ function loadgame() {
     ctx=canv.getContext("2d");
     document.addEventListener("keydown", keyPush);
     timeRef = setInterval(game, defaultDiff);    
-
 }
 
 
@@ -68,11 +68,11 @@ function game() {
             tail = 5;
             //reset consumption counter
             consumed = 0;
+            diff = "0";
             clearInterval(timeRef)
             timeRef = setInterval(game, defaultDiff);
         }
     }
-    
     
     //snake takes location
     trail.push({x:px,y:py});
@@ -87,13 +87,31 @@ function game() {
         randomPlacement(ax, ay)
         if (consumed % 5 == 0) {
             //every 5 "fruits" consumed, increase difficulty.
-            //future enhancement - different starting difficulties?
+            //limit difficulty > 5 = max
+            if (parseInt(diff) < 5) {
+                diff = parseInt(diff) + 1;
+                SetDiff = SetDiff - 5;
+            }
+            else if (parseInt(diff) == 5) {
+                //nothing after diff = 5
+                SetDiff = SetDiff - 5;
+                diff = "MAX";
+            }
             clearInterval(timeRef)
-            timeRef = setInterval(game, defaultDiff-10)
+            timeRef = setInterval(game, SetDiff)
         }
-	}
+    }
+    
+    //generate fruit
 	ctx.fillStyle="red";
-	ctx.fillRect(ax*gs,ay*gs,gs-2,gs-2);
+    ctx.fillRect(ax*gs,ay*gs,gs-2,gs-2);
+    
+    //score
+    ctx.fillStyle = "white";
+    ctx.fillText("SCORE: " + consumed, 335, 30);
+    //difficulty
+    ctx.fillStyle = "white";
+    ctx.fillText("DIFFICULTY: " + diff, 314, 42);
 }
 
 //handle for randomness of fruit generation
